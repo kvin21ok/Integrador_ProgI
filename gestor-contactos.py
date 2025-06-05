@@ -5,15 +5,11 @@ import json
 # Inicializar colorama
 init(autoreset=True)
 
-# -------------------------------
 # Contactos de ejemplo
-# -------------------------------
 with open('contactos.json', 'r', encoding='utf-8') as f:
     contactos_precargados = json.load(f)
 
-# -------------------------------
 # Función para ingresar contactos manualmente
-# -------------------------------
 def cargar_contactos():
     contactos = []
     cantidad = int(input("¿Cuántos contactos querés ingresar? "))
@@ -24,9 +20,7 @@ def cargar_contactos():
         contactos.append({"nombre": nombre, "telefono": telefono})
     return contactos
 
-# -------------------------------
 # Algoritmo de ordenamiento: Bubble Sort
-# -------------------------------
 def bubble_sort(lista):
     n = len(lista)
     for i in range(n):
@@ -34,9 +28,7 @@ def bubble_sort(lista):
             if lista[j]["nombre"].lower() > lista[j + 1]["nombre"].lower():
                 lista[j], lista[j + 1] = lista[j + 1], lista[j]
 
-# -------------------------------
 # Algoritmos de búsqueda
-# -------------------------------
 def busqueda_lineal(lista, nombre):
     for contacto in lista:
         if contacto["nombre"].lower() == nombre.lower():
@@ -67,9 +59,7 @@ def mostrar_contactos(lista):
     for contacto in lista:
         print(Fore.YELLOW + f"{contacto['nombre']} - {contacto['telefono']}")
 
-# -------------------------------
 # Ejecución principal
-# -------------------------------
 modo = input("¿Querés ingresar los contactos manualmente? (s/n): ").lower()
 
 if modo == "s":
@@ -88,7 +78,6 @@ while True:
 
 # Ordenamiento
     bubble_sort(contactos)
-
     print(Fore.MAGENTA + "\n📚 Lista ordenada alfabéticamente:")
     mostrar_contactos(contactos)
 
