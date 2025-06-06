@@ -5,12 +5,13 @@ import json
 # Inicializar colorama
 init(autoreset=True)
 
-# Contactos de ejemplo
-with open('contactos.json', 'r', encoding='utf-8') as f:
-    contactos_precargados = json.load(f)
+# Cargar contactos precargados desde un archivo JSON
+def cargar_contactos_precargados():
+    with open('contactos.json', 'r', encoding='utf-8') as f:
+        return json.load(f)
 
-# Función para ingresar contactos manualmente
-def cargar_contactos():
+# Cargar contactos manualmente desde el input
+def cargar_contactos_manualmente():
     contactos = []
     cantidad = int(input("¿Cuántos contactos querés ingresar? "))
     for i in range(cantidad):
@@ -20,7 +21,7 @@ def cargar_contactos():
         contactos.append({"nombre": nombre, "telefono": telefono})
     return contactos
 
-# Algoritmo de ordenamiento: Bubble Sort
+# Algoritmo Bubble Sort para ordenar contactos alfabéticamente por nombre
 def bubble_sort(lista):
     n = len(lista)
     for i in range(n):
@@ -28,7 +29,7 @@ def bubble_sort(lista):
             if lista[j]["nombre"].lower() > lista[j + 1]["nombre"].lower():
                 lista[j], lista[j + 1] = lista[j + 1], lista[j]
 
-# Algoritmos de búsqueda
+# Búsquedas
 def busqueda_lineal(lista, nombre):
     for contacto in lista:
         if contacto["nombre"].lower() == nombre.lower():
@@ -59,67 +60,77 @@ def mostrar_contactos(lista):
     for contacto in lista:
         print(Fore.YELLOW + f"{contacto['nombre']} - {contacto['telefono']}")
 
-# Ejecución principal
-modo = input("¿Querés ingresar los contactos manualmente? (s/n): ").lower()
-
-if modo == "s":
-    contactos = cargar_contactos()
-else:
-    contactos = contactos_precargados.copy()
-    print(Fore.GREEN + "\n✅ Usando lista de contactos precargados.")
-while True:
-    print(Fore.CYAN + "📱 GESTOR DE CONTACTOS")
-    print(Fore.CYAN + "----------------------")
-
+# Función principal de la aplicación
+def main():
+    modo = obtener_modo_ingreso()
     
-
-    print(Fore.MAGENTA + "\n📋 Lista de contactos ingresados:")
-    mostrar_contactos(contactos)
-
-# Ordenamiento
-    bubble_sort(contactos)
-    print(Fore.MAGENTA + "\n📚 Lista ordenada alfabéticamente:")
-    mostrar_contactos(contactos)
-
-# Búsqueda por nombre
-    nombre_buscado = input(Fore.CYAN + "\n🔍 Ingresá un nombre para buscar: ")
-
-    inicio = time.perf_counter()
-    res_lineal = busqueda_lineal(contactos, nombre_buscado)
-    tiempo_lineal = time.perf_counter() - inicio
-
-    inicio = time.perf_counter()
-    res_binaria = busqueda_binaria(contactos, nombre_buscado)
-    tiempo_binaria = time.perf_counter() - inicio
-
-    print(Fore.CYAN + "\n📊 Resultados de búsqueda por nombre:")
-    if res_lineal:
-        print(Fore.GREEN + f"🔎 Lineal: {res_lineal} ({tiempo_lineal:.14f} segundos)")
+    if modo == "s":
+        contactos = cargar_contactos_manualmente()
     else:
-        print(Fore.RED + "❌ No se encontró con búsqueda lineal.")
+        contactos = cargar_contactos_precargados()
+        print(Fore.GREEN + "\n✅ Usando lista de contactos precargados.")
+    
+    while True:
+        print(Fore.CYAN + "\n📱 GESTOR DE CONTACTOS")
+        print(Fore.CYAN + "----------------------")
 
-    if res_binaria:
-        print(Fore.GREEN + f"🔎 Binaria: {res_binaria} ({tiempo_binaria:.14f} segundos)")
-    else:
-        print(Fore.RED + "❌ No se encontró con búsqueda binaria.")
+        print(Fore.MAGENTA + "\n📋 Lista de contactos ingresados:")
+        mostrar_contactos(contactos)
 
-    if tiempo_binaria > 0:
-        relacion = tiempo_lineal / tiempo_binaria
-        print(Fore.BLUE + f"\n📈 Relación de rendimiento (lineal/binaria): {relacion:.2f} a 1")
-    else:
-        print(Fore.RED + "\n⚠️ No se puede calcular la relación (tiempo de búsqueda binaria es 0)")
+        # Ordenar y mostrar
+        bubble_sort(contactos)
+        print(Fore.MAGENTA + "\n📚 Lista ordenada alfabéticamente:")
+        mostrar_contactos(contactos)
 
-# Búsqueda por teléfono
-    telefono_buscado = input(Fore.CYAN + "\n📞 Ingresá un número para buscar por teléfono: ")
-    res_telefono = buscar_por_telefono(contactos, telefono_buscado)
+        # Buscar por nombre
+        nombre_buscado = input(Fore.CYAN + "\n🔍 Ingresá un nombre para buscar: ")
 
-    print(Fore.CYAN + "\n📲 Resultado de búsqueda por teléfono:")
-    if res_telefono:
-        print(Fore.GREEN + f"✅ Encontrado: {res_telefono}")
-    else:
-        print(Fore.RED + "❌ No se encontró ese número.")
+        inicio = time.perf_counter()
+        res_lineal = busqueda_lineal(contactos, nombre_buscado)
+        tiempo_lineal = time.perf_counter() - inicio
+        res_binaria = busqueda_binaria(contactos, nombre_buscado)
+        tiempo_binaria = time.perf_counter() - inicio
 
-    opcion = input(Fore.CYAN + "\n¿Querés realizar otra operación? (s para seguir / cualquier otra tecla para salir): ").lower()
-    if opcion != "s":
-        print(Fore.CYAN + "\n👋 ¡Hasta la próxima!")
-        break
+        print(Fore.CYAN + "\n📊 Resultados de búsqueda por nombre:")
+        if res_lineal:
+            print(Fore.GREEN + f"🔎 Lineal: {res_lineal} ({tiempo_lineal:.14f} segundos)")
+        else:
+            print(Fore.RED + "❌ No se encontró con búsqueda lineal.")
+
+        if res_binaria:
+            print(Fore.GREEN + f"🔎 Binaria: {res_binaria} ({tiempo_binaria:.14f} segundos)")
+        else:
+            print(Fore.RED + "❌ No se encontró con búsqueda binaria.")
+
+        if tiempo_binaria > 0:
+            relacion = tiempo_lineal / tiempo_binaria
+            print(Fore.BLUE + f"\n📈 Relación de rendimiento (lineal/binaria): {relacion:.2f} a 1")
+        else:
+            print(Fore.RED + "\n⚠️ No se puede calcular la relación (tiempo de búsqueda binaria es 0)")
+
+        # Buscar por teléfono
+        telefono_buscado = input(Fore.CYAN + "\n📞 Ingresá un número para buscar por teléfono: ")
+        res_telefono = buscar_por_telefono(contactos, telefono_buscado)
+
+        print(Fore.CYAN + "\n📲 Resultado de búsqueda por teléfono:")
+        if res_telefono:
+            print(Fore.GREEN + f"✅ Encontrado: {res_telefono}")
+        else:
+            print(Fore.RED + "❌ No se encontró ese número.")
+
+        opcion = input(Fore.CYAN + "\n¿Querés realizar otra operación? (s para seguir / cualquier otra tecla para salir): ").lower()
+        if opcion != "s":
+            print(Fore.CYAN + "\n👋 ¡Hasta la próxima!")
+            break
+
+# Validar opción de ingreso
+def obtener_modo_ingreso():
+    while True:
+        modo = input("¿Querés ingresar los contactos manualmente? (s/n): ").lower()
+        if modo in ["s", "n"]:
+            return modo
+        else:
+            print(Fore.RED + "⚠️ Ingresá una opción válida: 's' para sí o 'n' para no.")
+
+# Punto de entrada
+main()
