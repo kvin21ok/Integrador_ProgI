@@ -23,32 +23,32 @@ def cargar_contactos_manualmente():
 
 # Algoritmo Bubble Sort para ordenar contactos alfabéticamente por nombre
 def bubble_sort(lista):
-    n = len(lista)
-    for i in range(n):
-        for j in range(0, n - i - 1):
-            if lista[j]["nombre"].lower() > lista[j + 1]["nombre"].lower():
-                lista[j], lista[j + 1] = lista[j + 1], lista[j]
+    n = len(lista) #se obriene la longitud de la lista
+    for i in range(n): #bucle externo para recorrer toda la lista
+        for j in range(0, n - i - 1): #bucle interno para comparar elementos adyacentes, la parte "n - i - 1" evita la comparacion de elementos ya ordenados al final
+            if lista[j]["nombre"].lower() > lista[j + 1]["nombre"].lower(): #compara los nombres de dos contactos adyacentes ignorando mayusculas/minusculas
+                lista[j], lista[j + 1] = lista[j + 1], lista[j] #si el nombre actual es mayor que el siguiente, los intercambia
 
 # Búsquedas
 def busqueda_lineal(lista, nombre):
-    for contacto in lista:
-        if contacto["nombre"].lower() == nombre.lower():
-            return contacto
-    return None
+    for contacto in lista: #recorre todos los contactos
+        if contacto["nombre"].lower() == nombre.lower(): #compara el nombre del contacto con el nombre buscado ignorando mayusculas/minusculas
+            return contacto #si lo encuentra, devuelve ese contacto
+    return None #si no lo encuentra despues de revisar toda la lista, devuelve este valor
 
 def busqueda_binaria(lista, nombre):
-    izquierda = 0
+    izquierda = 0 #se establecen los indices iniciales de los extremos de busqueda
     derecha = len(lista) - 1
-    while izquierda <= derecha:
-        medio = (izquierda + derecha) // 2
-        actual = lista[medio]["nombre"].lower()
-        if actual == nombre.lower():
+    while izquierda <= derecha: #mientras el indice izquierdo no supere al derecho, sigue buscando
+        medio = (izquierda + derecha) // 2 #calcula el indice del elemento medio
+        actual = lista[medio]["nombre"].lower() #obtiene el nombre del contacto de la posicion media y lo transforma a minusculas
+        if actual == nombre.lower(): #si el nombre actual coincide con el buscado, devuelve ese nombre
             return lista[medio]
-        elif actual < nombre.lower():
+        elif actual < nombre.lower(): #si el nombre actual es menor (alfabeticamente hablando) al buscado, busca en la mitad derecha
             izquierda = medio + 1
-        else:
+        else: #si el nombre actual es mayor (alfabeticamente hablando) al buscado, busca en la mitad izquierda
             derecha = medio - 1
-    return None
+    return None #valor que devuelve si no encuentra el nombre
 
 def buscar_por_telefono(lista, numero):
     for contacto in lista:
@@ -85,11 +85,13 @@ def main():
         # Buscar por nombre
         nombre_buscado = input(Fore.CYAN + "\n🔍 Ingresá un nombre para buscar: ")
 
-        inicio = time.perf_counter()
-        res_lineal = busqueda_lineal(contactos, nombre_buscado)
-        tiempo_lineal = time.perf_counter() - inicio
-        res_binaria = busqueda_binaria(contactos, nombre_buscado)
-        tiempo_binaria = time.perf_counter() - inicio
+        inicio = time.perf_counter() #momento de inicio justo antes de iniciar busqueda lineal
+        res_lineal = busqueda_lineal(contactos, nombre_buscado) #ejecuta busqueda lineal y guarda el resultado
+        tiempo_lineal = time.perf_counter() - inicio #calcula el tiempo que tardo la busqueda lineal
+
+        inicio = time.perf_counter() #se reinicia el tiempo de inicio antes de iniciar busqueda binaria
+        res_binaria = busqueda_binaria(contactos, nombre_buscado) #ejecuta la busqueda binaria y guarda el resultado
+        tiempo_binaria = time.perf_counter() - inicio #calcula el tiempo que tardo la busqueda binaria
 
         print(Fore.CYAN + "\n📊 Resultados de búsqueda por nombre:")
         if res_lineal:
