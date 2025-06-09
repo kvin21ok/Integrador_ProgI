@@ -60,6 +60,12 @@ Al ejecutar el programa, el usuario podrá:
 
 ---
 
+## 🔗 Link al video
+
+https://www.youtube.com/watch?v=sdaAh6PVmhw&ab_channel=KevinGastaldello
+
+---
+
 ## 👨‍💻 Autor/es
 
 Este proyecto fue desarrollado por:
